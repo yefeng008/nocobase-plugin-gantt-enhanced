@@ -89,6 +89,8 @@ export const GanttBlock = observer(
       const [startDate, endDate] = ganttDateRange(tasks, viewMode, preStepsCount);
       return { viewMode, dates: seedDates(startDate, endDate, viewMode) };
     });
+    const dateSetupRef = useRef(dateSetup);
+    dateSetupRef.current = dateSetup;
     const [currentViewDate, setCurrentViewDate] = useState<Date | undefined>(undefined);
     const [tableClientWidth, setTableClientWidth] = useState(0);
     const [svgContainerWidth, setSvgContainerWidth] = useState(0);
@@ -559,7 +561,7 @@ export const GanttBlock = observer(
         let newDates: Date[];
         if (direction === 'today') {
           const now = new Date();
-          const count = dateSetup.dates.length;
+          const count = dateSetupRef.current.dates.length;
           const half = Math.floor(count / 2);
           const start = addToDate(now, -half * quantity, scale);
           newDates = [];
@@ -570,7 +572,7 @@ export const GanttBlock = observer(
           }
         } else {
           const dir = direction === 'left' ? -1 : 1;
-          newDates = dateSetup.dates.map((date) => addToDate(date, dir * quantity, scale));
+          newDates = dateSetupRef.current.dates.map((date) => addToDate(date, dir * quantity, scale));
         }
         rebuildBars(newDates);
       };
@@ -582,7 +584,6 @@ export const GanttBlock = observer(
     }, [
       model,
       viewMode,
-      dateSetup.dates,
       visibleTasks,
       columnWidth,
       rowHeight,
