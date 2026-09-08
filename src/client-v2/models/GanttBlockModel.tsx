@@ -25,6 +25,7 @@ import {
   MultiRecordResource,
 } from '@nocobase/flow-engine';
 import { Button, Select, Space } from 'antd';
+import { define, observable } from '@formily/reactive';
 import React from 'react';
 import { Task } from '../shared/types/public-types';
 import { createGanttEventViewActionOptions } from './actions/GanttPopupModels';
@@ -44,6 +45,7 @@ import {
   TITLE_FIELD_TYPES,
 } from './GanttBlockModel.helpers';
 import { registerGanttBlockModelSettings } from './GanttBlockModel.settings';
+import { LEGACY_NAMESPACE, NAMESPACE } from '../locale';
 
 type GanttBlockStructure = {
   subModels: {
@@ -78,6 +80,11 @@ const POPUP_TEMPLATE_SETTING_KEYS = [
 
 export class GanttBlockModel extends TableBlockModel {
   static scene = BlockSceneEnum.many;
+
+  constructor(options: any) {
+    super(options);
+    define(this, { userViewMode: observable });
+  }
 
   customModelClasses = {
     CollectionActionGroupModel: 'GanttCollectionActionGroupModel',
@@ -199,14 +206,19 @@ export class GanttBlockModel extends TableBlockModel {
 
   private treeExpanded = false;
 
-  userViewMode?: string;
+  userViewMode: string | undefined = undefined;
 
   getUserViewMode() {
     return this.userViewMode || this.getFieldNames().range || 'day';
   }
 
+  translateGantt(key: string) {
+    return this.context.t(key, { ns: [NAMESPACE, LEGACY_NAMESPACE, 'client'], nsMode: 'fallback' });
+  }
+
   setUserViewMode(viewMode: string) {
     this.userViewMode = viewMode;
+    this.setProps({ ...this.props, userViewMode: viewMode });
     this.emitter.emit('viewModeChange', viewMode);
   }
 
@@ -215,19 +227,19 @@ export class GanttBlockModel extends TableBlockModel {
       case 'hour':
       case 'quarterDay':
       case 'halfDay':
-        return this.translate('Now');
+        return this.translateGantt('Now');
       case 'day':
-        return this.translate('Today');
+        return this.translateGantt('Today');
       case 'week':
-        return this.translate('This week');
+        return this.translateGantt('This week');
       case 'month':
-        return this.translate('This month');
+        return this.translateGantt('This month');
       case 'quarterYear':
-        return this.translate('This quarter');
+        return this.translateGantt('This quarter');
       case 'year':
-        return this.translate('This year');
+        return this.translateGantt('This year');
       default:
-        return this.translate('Today');
+        return this.translateGantt('Today');
     }
   }
 
@@ -686,6 +698,17 @@ export class GanttBlockModel extends TableBlockModel {
         >
           <Space wrap>
             {this.renderTimeNavigation()}
+            {this.props?.allowUserZoom === true && (
+              <Space size={4}>
+                <span>{this.translateGantt('Zoom level')}</span>
+                <Select
+                  value={this.getUserViewMode()}
+                  options={getTimeScaleOptions((key) => this.translateGantt(key))}
+                  onChange={(v) => this.setUserViewMode(v as string)}
+                  style={{ width: 110 }}
+                />
+              </Space>
+            )}
             {actions.map((action) => {
               if (action.hidden && !isConfigMode) {
                 return;
@@ -733,14 +756,6 @@ export class GanttBlockModel extends TableBlockModel {
                 </Droppable>
               );
             })}
-            {this.props?.allowUserZoom === true && (
-              <Select
-                value={this.getUserViewMode()}
-                options={getTimeScaleOptions((key) => this.translate(key))}
-                onChange={(v) => this.setUserViewMode(v as string)}
-                style={{ width: 110 }}
-              />
-            )}
             {this.renderConfigureActions()}
           </Space>
         </div>
