@@ -1,99 +1,88 @@
-# NocoBase
+# @yefeng008/plugin-gantt-enhanced
 
-<video width="100%" controls>
-  <source src="https://github.com/user-attachments/assets/4d11a87b-00e2-48f3-9bf7-389d21072d13" type="video/mp4">
-</video>
+NocoBase 甘特图区块插件（增强版），基于官方 [`@nocobase/plugin-gantt`](https://github.com/nocobase/nocobase/tree/main/packages/plugins/%40nocobase/plugin-gantt) fork 而来。
 
-<p align="center">
-<a href="https://trendshift.io/repositories/4112" target="_blank"><img src="https://trendshift.io/api/badge/repositories/4112" alt="nocobase%2Fnocobase | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
-<a href="https://www.producthunt.com/posts/nocobase?embed=true&utm_source=badge-top-post-topic-badge&utm_medium=badge&utm_souce=badge-nocobase" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/top-post-topic-badge.svg?post_id=456520&theme=light&period=weekly&topic_id=267" alt="NocoBase - Scalability&#0045;first&#0044;&#0032;open&#0045;source&#0032;no&#0045;code&#0032;platform | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54" /></a>
-</p>
+> A NocoBase Gantt block plugin (enhanced), forked from the official `@nocobase/plugin-gantt`.
 
-## What is NocoBase
+## 增强功能 / Enhancements
 
-NocoBase is the most extensible AI-powered no-code platform.   
-Total control. Infinite extensibility. AI collaboration.  
-Enable your team to adapt quickly and cut costs dramatically.  
-No years of development. No millions wasted.  
-Deploy NocoBase in minutes — and take control of everything.
+相比官方甘特图，本插件新增以下功能：
 
-Homepage:  
-https://www.nocobase.com/  
+### 1. 允许用户自定义缩放
 
-Online Demo:  
-https://demo.nocobase.com/new
+- 区块配置中新增「允许用户自定义缩放」开关（默认关闭）
+- 开启后，工具栏右侧出现缩放下拉框，使用用户（非配置用户）可自由切换缩放等级
+- 缩放选项：小时 / 四分之一天 / 半天 / 天 / 周 / 月 / 季度 / 年
 
-Documents:  
-https://docs.nocobase.com/
+### 2. 时间导航按钮组
 
-Forum:  
-https://forum.nocobase.com/
+- 工具栏新增 3 个按钮：**左箭头 / 中间"回到当前" / 右箭头**
+- 左右箭头：无限移动时间坐标轴（每次移动一个时间单位，可连续点击）
+- 中间按钮：回到当前时间，文字随缩放等级智能变化：
+  - 半天以内（小时/四分之一天/半天）→「现在」
+  - 天 →「今天」
+  - 周 →「本周」
+  - 月 →「本月」
+  - 季度 →「本季度」
+  - 年 →「本年度」
 
-Use Cases:  
-https://www.nocobase.com/en/blog/tags/customer-stories
+### 3. 移除水平滚动条
 
-## Release Notes
+用左右按钮替代水平滚动条，界面更简洁。
 
-Our [blog](https://www.nocobase.com/en/blog/timeline) is regularly updated with release notes and provides a weekly summary.
+## 安装 / Installation
 
-## Distinctive features
+**方式 A：插件管理器上传**
 
-### 1. Data model-driven, not form/table–driven
+1. NocoBase 管理后台 → 插件管理器 → 上传插件
+2. 选择 `plugin-gantt-enhanced-2.2.0.tgz`
 
-Instead of being constrained by forms or tables, NocoBase adopts a data model–driven approach, separating data structure from user interface to unlock unlimited possibilities.
+**方式 B：命令行**
 
-- UI and data structure are fully decoupled
-- Multiple blocks and actions can be created for the same table or record in any quantity or form
-- Supports the main database, external databases, and third-party APIs as data sources
+```bash
+yarn pm add ./plugin-gantt-enhanced-2.2.0.tgz
+```
 
-![model](https://static-docs.nocobase.com/model.png)
+安装后在插件管理器中启用本插件，区块类型中会出现「甘特图（增强版）」。
 
-### 2. AI employees, integrated into your business systems
-Unlike standalone AI demos, NocoBase allows you to embed AI capabilities seamlessly into your interfaces, workflows, and data context, making AI truly useful in real business scenarios.
+> 建议禁用官方「甘特图」插件，避免两个同名区块混淆。
 
-- Define AI employees for roles such as translator, analyst, researcher, or assistant
-- Seamless AI–human collaboration in interfaces and workflows
-- Ensure AI usage is secure, transparent, and customizable for your business needs
+## 使用说明 / Usage
 
-![AI-employee](https://static-docs.nocobase.com/ai-employee-home.png)
+1. 在页面中添加「甘特图（增强版）」区块，绑定数据表
+2. 配置字段映射：标题、开始日期、结束日期、进度、颜色等
+3. 在区块配置中打开「允许用户自定义缩放」
+4. 使用工具栏的左右按钮浏览时间轴，点击中间按钮回到当前时间
 
-### 3. What you see is what you get, incredibly easy to use
+## 与官方 gantt 的关系 / Relationship with upstream
 
-While enabling the development of complex business systems, NocoBase keeps the experience simple and intuitive.
+| | 官方 gantt | 本插件 |
+|---|---|---|
+| 包名 | `@nocobase/plugin-gantt` | `@yefeng008/plugin-gantt-enhanced` |
+| 升级覆盖 | 会被 NocoBase 升级覆盖 | 独立包，不受影响 |
+| 增强功能 | 无 | 缩放开关 + 时间导航 + 去滚动条 |
 
-- One-click switch between usage mode and configuration mode
-- Pages serve as a canvas to arrange blocks and actions, similar to Notion
-- Configuration mode is designed for ordinary users, not just programmers
+## 开发 / Development
 
-![wysiwyg](https://static-docs.nocobase.com/wysiwyg.gif)
+```bash
+# 在 NocoBase 源码环境中
+yarn build @yefeng008/plugin-gantt-enhanced   # 编译
+yarn tar @yefeng008/plugin-gantt-enhanced     # 打包
+```
 
-### 4. Everything is a plugin, designed for extension
-Adding more no-code features will never cover every business case. NocoBase is built for extension through its plugin-based microkernel architecture.
+目录结构：
 
-- All functionalities are plugins, similar to WordPress
-- Plugins are ready to use upon installation
-- Pages, blocks, actions, APIs, and data sources can all be extended through custom plugins
+```
+src/
+├── client/        # v1 客户端（兼容旧界面）
+├── client-v2/     # v2 客户端（/v/ 界面，增强功能在此实现）
+│   └── models/
+│       ├── GanttBlockModel.tsx       # 区块模型（缩放状态、时间导航按钮）
+│       └── components/GanttBlock.tsx # 区块组件（时间窗口偏移、回到当前）
+├── server/        # 服务端
+└── locale/        # 多语言
+```
 
-![plugins](https://static-docs.nocobase.com/plugins.png)
+## License
 
-## Installation
-
-NocoBase supports three installation methods:
-
-- <a target="_blank" href="https://docs.nocobase.com/welcome/getting-started/installation/docker-compose">Installing With Docker (👍Recommended)</a>
-
-  Suitable for no-code scenarios, no code to write. When upgrading, just download the latest image and reboot.
-
-- <a target="_blank" href="https://docs.nocobase.com/welcome/getting-started/installation/create-nocobase-app">Installing from create-nocobase-app CLI</a>
-
-  The business code of the project is completely independent and supports low-code development.
-
-- <a target="_blank" href="https://docs.nocobase.com/welcome/getting-started/installation/git-clone">Installing from Git source code</a>
-
-  If you want to experience the latest unreleased version, or want to participate in the contribution, you need to make changes and debug on the source code, it is recommended to choose this installation method, which requires a high level of development skills, and if the code has been updated, you can git pull the latest code.
-
-## How NocoBase works
-
-<video width="100%" controls>
-  <source src="https://github.com/user-attachments/assets/8d183b44-9bb5-4792-b08f-bc08fe8dfaaf" type="video/mp4">
-</video>
+Apache-2.0（沿用上游许可证）
